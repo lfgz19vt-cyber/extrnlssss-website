@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>.gg/extrnl/METH - Share Programming Methods</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --background: hsl(240, 10%, 3.9%);
+            --foreground: hsl(0, 0%, 98%);
+            --card: hsl(240, 10%, 7%);
+            --card-foreground: hsl(0, 0%, 98%);
+            --primary: hsl(0, 84%, 60%);
+            --primary-foreground: hsl(0, 0%, 98%);
+            --secondary: hsl(217, 91%, 60%);
+            --secondary-foreground: hsl(0, 0%, 98%);
+            --muted: hsl(240, 3.7%, 15.9%);
+            --muted-foreground: hsl(240, 5%, 64.9%);
+            --accent: hsl(217, 91%, 60%);
+            --accent-foreground: hsl(0, 0%, 98%);
+            --border: hsl(240, 3.7%, 15.9%);
+            --input: hsl(240, 3.7%, 15.9%);
+            --ring: hsl(0, 84%, 60%);
+            --font-sans: "Inter", sans-serif;
+            --radius: 0.75rem;
+        }
+
+        * {
+            border-color: hsl(var(--border));
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: hsl(var(--background));
+            color: hsl(var(--foreground));
+            overflow-x: hidden;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Glass effect */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Glow effects */
+        .glow-effect {
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.3);
+        }
+
+        .blue-glow {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Button styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            outline: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, hsl(var(--primary)), hsl(var(--accent)));
+            color: hsl(var(--primary-foreground));
+            padding: 8px 16px;
+        }
+
+        .btn-secondary {
+            background: hsl(var(--muted));
+            color: hsl(var(--muted-foreground));
+            padding: 8px 16px;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: hsl(var(--foreground));
+            padding: 8px 16px;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            opacity: 0.9;
+        }
+
+        /* Input styles */
+        .input {
+            flex: 1;
+            border: 1px solid hsl(var(--border));
+            background: hsl(var(--background));
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            color: hsl(var(--foreground));
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .input:focus {
+            border-color: hsl(var(--ring));
+            box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2);
+        }
+
+        /* Card styles */
+        .card {
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            color: hsl(var(--card-foreground));
+        }
+
+        /* Badge styles */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 9999px;
+            padding: 2px 8px;
+            font-size: 12px;
+            font-weight: 500;
+            background: rgba(59, 130, 246, 0.2);
+            color: hsl(var(--accent));
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(16, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid hsl(var(--border));
+            padding: 16px 0;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(45deg, hsl(var(--primary)), hsl(var(--accent)));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Search bar */
+        .search-container {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 12px 8px 40px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: hsl(var(--muted-foreground));
+        }
+
+        /* Navigation */
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .nav-link {
+            color: hsl(var(--foreground));
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: hsl(var(--primary));
+        }
+
+        /* Hero section */
+        .hero {
+            text-align: center;
+            padding: 48px 0;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(45deg, hsl(var(--primary)), hsl(var(--accent)), hsl(var(--secondary)));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: hsl(var(--muted-foreground));
+            margin-bottom: 32px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Methods grid */
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .method-card {
+            padding: 24px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .method-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+        }
+
+        .method-header {
+            display: flex;
+            align-items: start;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .method-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .method-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .method-details h4 {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .method-details p {
+            font-size: 14px;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .method-description {
+            color: hsl(var(--muted-foreground));
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .method-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .method-stats {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 14px;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .stat:hover {
+            color: hsl(var(--primary));
+        }
+
+        /* Upload section */
+        .upload-section {
+            padding: 48px 24px;
+            text-align: center;
+            border: 2px dashed hsl(var(--border));
+            border-radius: var(--radius);
+            margin: 48px 0;
+        }
+
+        .upload-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+        }
+
+        .upload-section p {
+            color: hsl(var(--muted-foreground));
+            margin-bottom: 24px;
+        }
+
+        /* Floating buttons */
+        .floating-buttons {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 40;
+        }
+
+        .floating-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .floating-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Snowflake animation */
+        .snowflake {
+            position: fixed;
+            color: rgba(59, 130, 246, 0.6);
+            pointer-events: none;
+            animation: fall linear infinite;
+            z-index: 1;
+            font-size: 12px;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Sort buttons */
+        .sort-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: between;
+            margin-bottom: 24px;
+        }
+
+        .sort-buttons h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .sort-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .header-content {
+                flex-wrap: wrap;
+            }
+            
+            .nav {
+                display: none;
+            }
+            
+            .methods-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Hide scroll to top initially */
+        .scroll-top-hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Snowflake canvas -->
+    <canvas id="snowflake-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;"></canvas>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-code"></i>
+                    .gg/extrnl/METH
+                </div>
+                
+                <div class="search-container">
+                    <div style="position: relative;">
+                        <input type="text" class="input search-input" placeholder="Search methods, tutorials, guides..." id="searchInput">
+                        <i class="fas fa-search search-icon"></i>
+                    </div>
+                </div>
+                
+                <nav class="nav">
+                    <a href="#" class="nav-link">Home</a>
+                    <a href="#" class="nav-link">Explore</a>
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-trending-up" style="margin-right: 4px;"></i>
+                        Promote
+                    </a>
+                    <a href="#" class="nav-link">Profile</a>
+                    <a href="#" class="nav-link">Memes</a>
+                    <button class="btn btn-ghost" onclick="toggleSettings()">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h2 class="hero-title">Share Your Methods</h2>
+            <p class="hero-subtitle">
+                Discover and share step-by-step methods, tutorials, and guides with the community
+            </p>
+            <button class="btn btn-primary glow-effect" onclick="scrollToUpload()">
+                <i class="fas fa-plus" style="margin-right: 8px;"></i>
+                Upload Method
+            </button>
+        </section>
+
+        <!-- Upload Section -->
+        <section class="upload-section glass-effect" id="uploadSection">
+            <h3>Upload Your Method</h3>
+            <p>Help others learn by sharing your coding techniques and solutions</p>
+            <button class="btn btn-primary blue-glow" onclick="openUploadModal()">
+                <i class="fas fa-cloud-upload-alt" style="margin-right: 8px;"></i>
+                Upload Method
+            </button>
+        </section>
+
+        <!-- Methods Grid -->
+        <section>
+            <div class="sort-buttons">
+                <h3 id="sectionTitle">Latest Methods</h3>
+                <div class="sort-controls">
+                    <button class="btn btn-primary" id="popularBtn" onclick="sortBy('popular')">
+                        <i class="fas fa-fire" style="margin-right: 4px;"></i>
+                        Popular
+                    </button>
+                    <button class="btn btn-secondary" id="recentBtn" onclick="sortBy('recent')">
+                        <i class="fas fa-clock" style="margin-right: 4px;"></i>
+                        Recent
+                    </button>
+                </div>
+            </div>
+
+            <div class="methods-grid" id="methodsGrid">
+                <!-- Sample Methods -->
+                <div class="method-card card glass-effect" data-category="javascript" data-likes="94" data-views="401" data-date="2025-01-04">
+                    <div class="method-header">
+                        <div class="method-info">
+                            <div class="method-icon" style="background: linear-gradient(45deg, #dc2626, #3b82f6);">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <div class="method-details">
+                                <h4>Async/Await Best Practices</h4>
+                                <p>By CodeMaster</p>
+                            </div>
+                        </div>
+                        <span class="badge">JavaScript</span>
+                    </div>
+                    <p class="method-description">
+                        Handle asynchronous operations like a pro. Learn error handling, parallel execution, and performance optimization techniques.
+                    </p>
+                    <div class="method-footer">
+                        <div class="method-stats">
+                            <span class="stat" onclick="toggleLike(this)">
+                                <i class="far fa-heart"></i>
+                                <span>94</span>
+                            </span>
+                            <span class="stat">
+                                <i class="far fa-eye"></i>
+                                <span>401</span>
+                            </span>
+                        </div>
+                        <button class="btn btn-ghost" onclick="viewMethod(this)">
+                            <i class="fas fa-external-link-alt"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="method-card card glass-effect" data-category="extrnlbeaming" data-likes="156" data-views="789" data-date="2025-01-03">
+                    <div class="method-header">
+                        <div class="method-info">
+                            <div class="method-icon" style="background: linear-gradient(45deg, #f97316, #dc2626);">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <div class="method-details">
+                                <h4>EXTRNLBEAMING Algorithm</h4>
+                                <p>By EXTRNL Team</p>
+                            </div>
+                        </div>
+                        <span class="badge" style="background: linear-gradient(45deg, #f97316, #dc2626); color: white;">EXTRNLBEAMING ⚡ VIRAL</span>
+                    </div>
+                    <p class="method-description">
+                        Revolutionary data processing method that increases efficiency by 300%. Used by top companies worldwide.
+                    </p>
+                    <div class="method-footer">
+                        <div class="method-stats">
+                            <span class="stat" onclick="toggleLike(this)">
+                                <i class="far fa-heart"></i>
+                                <span>156</span>
+                            </span>
+                            <span class="stat">
+                                <i class="far fa-eye"></i>
+                                <span>789</span>
+                            </span>
+                        </div>
+                        <button class="btn btn-ghost" onclick="viewMethod(this)">
+                            <i class="fas fa-external-link-alt"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="method-card card glass-effect" data-category="react" data-likes="67" data-views="234" data-date="2025-01-02">
+                    <div class="method-header">
+                        <div class="method-info">
+                            <div class="method-icon" style="background: linear-gradient(45deg, #3b82f6, #8b5cf6);">
+                                <i class="fab fa-react"></i>
+                            </div>
+                            <div class="method-details">
+                                <h4>Custom React Hooks</h4>
+                                <p>By ReactDev</p>
+                            </div>
+                        </div>
+                        <span class="badge">React</span>
+                    </div>
+                    <p class="method-description">
+                        Build reusable logic with custom hooks. This method shows you how to create hooks that manage state and side effects effectively.
+                    </p>
+                    <div class="method-footer">
+                        <div class="method-stats">
+                            <span class="stat" onclick="toggleLike(this)">
+                                <i class="far fa-heart"></i>
+                                <span>67</span>
+                            </span>
+                            <span class="stat">
+                                <i class="far fa-eye"></i>
+                                <span>234</span>
+                            </span>
+                        </div>
+                        <button class="btn btn-ghost" onclick="viewMethod(this)">
+                            <i class="fas fa-external-link-alt"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="method-card card glass-effect" data-category="python" data-likes="89" data-views="312" data-date="2025-01-01">
+                    <div class="method-header">
+                        <div class="method-info">
+                            <div class="method-icon" style="background: linear-gradient(45deg, #10b981, #3b82f6);">
+                                <i class="fab fa-python"></i>
+                            </div>
+                            <div class="method-details">
+                                <h4>Python List Comprehensions</h4>
+                                <p>By PythonPro</p>
+                            </div>
+                        </div>
+                        <span class="badge">Python</span>
+                    </div>
+                    <p class="method-description">
+                        Master the art of list comprehensions for more Pythonic code. Learn when and how to use them for better performance.
+                    </p>
+                    <div class="method-footer">
+                        <div class="method-stats">
+                            <span class="stat" onclick="toggleLike(this)">
+                                <i class="far fa-heart"></i>
+                                <span>89</span>
+                            </span>
+                            <span class="stat">
+                                <i class="far fa-eye"></i>
+                                <span>312</span>
+                            </span>
+                        </div>
+                        <button class="btn btn-ghost" onclick="viewMethod(this)">
+                            <i class="fas fa-external-link-alt"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="method-card card glass-effect" data-category="css" data-likes="53" data-views="187" data-date="2024-12-30">
+                    <div class="method-header">
+                        <div class="method-info">
+                            <div class="method-icon" style="background: linear-gradient(45deg, #8b5cf6, #ec4899);">
+                                <i class="fab fa-css3-alt"></i>
+                            </div>
+                            <div class="method-details">
+                                <h4>CSS Grid Layout</h4>
+                                <p>By CSSMaster</p>
+                            </div>
+                        </div>
+                        <span class="badge">CSS</span>
+                    </div>
+                    <p class="method-description">
+                        Create complex layouts with CSS Grid. This comprehensive guide covers grid containers, items, and responsive design patterns.
+                    </p>
+                    <div class="method-footer">
+                        <div class="method-stats">
+                            <span class="stat" onclick="toggleLike(this)">
+                                <i class="far fa-heart"></i>
+                                <span>53</span>
+                            </span>
+                            <span class="stat">
+                                <i class="far fa-eye"></i>
+                                <span>187</span>
+                            </span>
+                        </div>
+                        <button class="btn btn-ghost" onclick="viewMethod(this)">
+                            <i class="fas fa-external-link-alt"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="method-card card glass-effect" data-category="algorithms" data-likes="76" data-views="298" data-date="2024-12-29">
+                    <div class="method-header">
+                        <div class="method-info">
+                            <div class="method-icon" style="background: linear-gradient(45deg, #f59e0b, #ef4444);">
+                                <i class="fas fa-project-diagram"></i>
+                            </div>
+                            <div class="method-details">
+                                <h4>Binary Search Implementation</h4>
+                                <p>By AlgoExpert</p>
+                            </div>
+                        </div>
+                        <span class="badge">Algorithms</span>
+                    </div>
+                    <p class="method-description">
+                        Efficient searching algorithm with O(log n) complexity. Includes step-by-step implementation and common variations.
+                    </p>
+                    <div class="method-footer">
+                        <div class="method-stats">
+                            <span class="stat" onclick="toggleLike(this)">
+                                <i class="far fa-heart"></i>
+                                <span>76</span>
+                            </span>
+                            <span class="stat">
+                                <i class="far fa-eye"></i>
+                                <span>298</span>
+                            </span>
+                        </div>
+                        <button class="btn btn-ghost" onclick="viewMethod(this)">
+                            <i class="fas fa-external-link-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Floating Action Buttons -->
+    <div class="floating-buttons">
+        <button class="floating-btn btn btn-primary glow-effect scroll-top-hidden" id="scrollTopBtn" onclick="scrollToTop()">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        <button class="floating-btn btn btn-secondary blue-glow" onclick="openUploadModal()">
+            <i class="fas fa-plus"></i>
+        </button>
+    </div>
+
+    <script>
+        // Global variables
+        let currentSort = 'recent';
+        let searchQuery = '';
+        
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        const methodsGrid = document.getElementById('methodsGrid');
+        const sectionTitle = document.getElementById('sectionTitle');
+        
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value.toLowerCase();
+            updateSectionTitle();
+            filterAndSortMethods();
+        });
+
+        // Update section title based on search
+        function updateSectionTitle() {
+            if (searchQuery) {
+                sectionTitle.textContent = `Search Results for "${searchQuery}"`;
+            } else {
+                sectionTitle.textContent = 'Latest Methods';
+            }
+        }
+
+        // Sort functionality
+        function sortBy(type) {
+            currentSort = type;
+            const popularBtn = document.getElementById('popularBtn');
+            const recentBtn = document.getElementById('recentBtn');
+            
+            if (type === 'popular') {
+                popularBtn.className = 'btn btn-primary';
+                recentBtn.className = 'btn btn-secondary';
+            } else {
+                popularBtn.className = 'btn btn-secondary';
+                recentBtn.className = 'btn btn-primary';
+            }
+            
+            filterAndSortMethods();
+        }
+
+        // Filter and sort methods
+        function filterAndSortMethods() {
+            const cards = Array.from(methodsGrid.querySelectorAll('.method-card'));
+            
+            // Filter based on search
+            cards.forEach(card => {
+                const title = card.querySelector('h4').textContent.toLowerCase();
+                const description = card.querySelector('.method-description').textContent.toLowerCase();
+                const category = card.querySelector('.badge').textContent.toLowerCase();
+                const author = card.querySelector('.method-details p').textContent.toLowerCase();
+                
+                const matches = !searchQuery || 
+                    title.includes(searchQuery) || 
+                    description.includes(searchQuery) || 
+                    category.includes(searchQuery) || 
+                    author.includes(searchQuery);
+                
+                card.style.display = matches ? 'block' : 'none';
+            });
+            
+            // Sort visible cards
+            const visibleCards = cards.filter(card => card.style.display !== 'none');
+            
+            visibleCards.sort((a, b) => {
+                if (currentSort === 'popular') {
+                    const likesA = parseInt(a.dataset.likes) || 0;
+                    const likesB = parseInt(b.dataset.likes) || 0;
+                    return likesB - likesA;
+                } else {
+                    const dateA = new Date(a.dataset.date);
+                    const dateB = new Date(b.dataset.date);
+                    return dateB - dateA;
+                }
+            });
+            
+            // Reorder in DOM
+            visibleCards.forEach(card => {
+                methodsGrid.appendChild(card);
+            });
+        }
+
+        // Like functionality
+        function toggleLike(element) {
+            const heartIcon = element.querySelector('i');
+            const likeCount = element.querySelector('span');
+            const currentLikes = parseInt(likeCount.textContent);
+            
+            if (heartIcon.classList.contains('far')) {
+                heartIcon.classList.remove('far');
+                heartIcon.classList.add('fas');
+                heartIcon.style.color = 'hsl(var(--primary))';
+                likeCount.textContent = currentLikes + 1;
+                
+                // Update dataset for sorting
+                const card = element.closest('.method-card');
+                card.dataset.likes = currentLikes + 1;
+            } else {
+                heartIcon.classList.remove('fas');
+                heartIcon.classList.add('far');
+                heartIcon.style.color = '';
+                likeCount.textContent = currentLikes - 1;
+                
+                // Update dataset for sorting
+                const card = element.closest('.method-card');
+                card.dataset.likes = currentLikes - 1;
+            }
+        }
+
+        // View method
+        function viewMethod(element) {
+            const card = element.closest('.method-card');
+            const title = card.querySelector('h4').textContent;
+            const viewsSpan = card.querySelector('.method-stats span:last-child span');
+            const currentViews = parseInt(viewsSpan.textContent);
+            
+            // Increment views
+            viewsSpan.textContent = currentViews + 1;
+            card.dataset.views = currentViews + 1;
+            
+            alert(`Opening: ${title}\n\nFull method details would be displayed here!`);
+        }
+
+        // Scroll to upload section
+        function scrollToUpload() {
+            document.getElementById('uploadSection').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+
+        // Open upload modal
+        function openUploadModal() {
+            alert('Upload method functionality would open a detailed form here!');
+        }
+
+        // Scroll to top
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Show/hide scroll to top button
+        let scrollTopBtn = document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                scrollTopBtn.classList.remove('scroll-top-hidden');
+            } else {
+                scrollTopBtn.classList.add('scroll-top-hidden');
+            }
+        });
+
+        // Settings toggle
+        function toggleSettings() {
+            alert('Settings panel would open here with theme and animation controls!');
+        }
+
+        // Snowflake animation
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.className = 'snowflake';
+            snowflake.innerHTML = '❄';
+            snowflake.style.left = Math.random() * 100 + '%';
+            snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
+            snowflake.style.opacity = Math.random() * 0.7 + 0.3;
+            snowflake.style.fontSize = Math.random() * 8 + 8 + 'px';
+            
+            document.body.appendChild(snowflake);
+            
+            setTimeout(() => {
+                if (snowflake.parentNode) {
+                    snowflake.remove();
+                }
+            }, 5000);
+        }
+
+        // Create snowflakes periodically
+        setInterval(createSnowflake, 300);
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'k') {
+                e.preventDefault();
+                searchInput.focus();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            filterAndSortMethods();
+        });
+    </script>
+</body>
+</html>
